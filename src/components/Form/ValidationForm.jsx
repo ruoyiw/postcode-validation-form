@@ -100,7 +100,7 @@ const ValidationForm = () => {
   };
 
   return (		
-		<div className="container">
+		<div className="container" data-cy="validation-form-container">
       <div className="validation-form__header-wrapper">
         <h1 className="validation-form__header">
           Validate your location

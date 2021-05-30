@@ -3,18 +3,19 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const FieldItem = ({ title, name, value, onChange, required, placeholder }) => (
-  <div className="validation-form__field-wrapper">
+  <div className="validation-form__field-wrapper" data-cy="field-wrapper">
 		<label className="validation-form__field-title" htmlFor={name}>
       {title}
       {required && <span className="validation-form__req-symbol"> *</span>}
     </label>
 		{name === 'state' ? (
       <select 
-        className="validation-form__field-body"
+        className="validation-form__field-body select"
         name="state"
         value={value}
         onChange={onChange}
         required={required}
+        data-cy="state-field"
       >
         <option value="">Choose state...</option>
         <option value="ACT">ACT</option>
@@ -29,12 +30,13 @@ const FieldItem = ({ title, name, value, onChange, required, placeholder }) => (
     ) : (
     <input
       type={name === 'postcode' ? "number" : "text"}
-      className="validation-form__field-body"
+      className="validation-form__field-body input"
       name={name}
       value={value}
       onChange={onChange}
       required={required}
       placeholder={placeholder}
+      data-cy={`${name}-field`}
 		/>
   )}
 	</div>

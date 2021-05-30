@@ -6,6 +6,7 @@ const ValidationMessage = ({ isValid, message }) => (
     <div
       className={isValid ? 'validation-form__message success' : 'validation-form__message error'}
       role="alert"
+      data-cy="validation-message"
     >
       {message}
     </div>

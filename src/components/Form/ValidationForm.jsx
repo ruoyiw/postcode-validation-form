@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import FieldItem from "../FieldItem/FieldItem";
 import ValidationMessage from "../ValidateMessage/ValidationMessage";
-import "./ValidationForm.scss";
+import "../../App.scss";
 
 const ValidationForm = () => {
   const [postcode, setPostcode] = useState('');
@@ -16,6 +16,8 @@ const ValidationForm = () => {
 		setPostcode('');
 		setSuburb('');
 		setState('');
+    setMessage('');
+    setIsValid(false);
 	};
 
   const fullStateName = {
@@ -63,9 +65,9 @@ const ValidationForm = () => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    axios.get(`http://localhost:8100/getLocalities?suburb=${suburb}&state=${state}`).then(
+    await axios.get(`http://localhost:8100/getLocalities?suburb=${suburb}&state=${state}`).then(
       ({data: {localities}}) => {
         let isValidPostcode; let isValidSuburb;
         if (localities !== "") {
@@ -87,7 +89,6 @@ const ValidationForm = () => {
         }
       }).catch(error => {
         setIsValid(false);
-        console.log(error.response);
         if (error.response && error.response.data.error){
           setMessage(error.response.data.error.errorMessage);
         } else if (error.response) {
@@ -100,28 +101,50 @@ const ValidationForm = () => {
 
   return (		
 		<div className="container">
-			<h1 className="validation-form__header">Validate your location</h1>
-			<div className="validation-form__wrapper">
+      <div className="validation-form__header-wrapper">
+        <h1 className="validation-form__header">
+          Validate your location
+        </h1>
+        <div className="validation-form__req-text">
+          Fields marked with 
+          <span className="validation-form__req-symbol"> *</span> are required
+        </div>
+      </div>
+			<div className="validation-form__form-wrapper">
 				<form className="validation-form__body" onSubmit={handleSubmit}>
 					<FieldItem
 						title="Postcode"
 						name="postcode"
 						value={postcode}
-						onChange={e => {setPostcode(e.target.value); setMessage('');}}
+						onChange={e => {
+              setPostcode(e.target.value);
+              setMessage('');
+              setIsValid(false);
+            }}
+            placeholder="e.g. 2000"
 						required
 					/>
 					<FieldItem
 						title="Suburb"
 						name="suburb"
 						value={suburb}
-						onChange={e => {setSuburb(e.target.value); setMessage('');}}
+						onChange={e => {
+              setSuburb(e.target.value);
+              setMessage('');
+              setIsValid(false);
+            }}
+            placeholder="e.g. Sydney"
 						required
 					/>
 					<FieldItem
 						title="State"
 						name="state"
 						value={state}
-						onChange={e => {setState(e.target.value); setMessage('');}}
+						onChange={e => {
+              setState(e.target.value);
+              setMessage('');
+              setIsValid(false);
+            }}
 						required
 					/>
           <ValidationMessage

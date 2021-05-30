@@ -2,11 +2,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const FieldItem = ({ title, name, value, onChange, required }) => (
-  <div>
+const FieldItem = ({ title, name, value, onChange, required, placeholder }) => (
+  <div className="validation-form__field-wrapper">
 		<label className="validation-form__field-title" htmlFor={name}>
       {title}
-      {required && <span className="validation-form__field-title__req-symbol"> *</span>}
+      {required && <span className="validation-form__req-symbol"> *</span>}
     </label>
 		{name === 'state' ? (
       <select 
@@ -19,12 +19,12 @@ const FieldItem = ({ title, name, value, onChange, required }) => (
         <option value="">Choose state...</option>
         <option value="ACT">ACT</option>
         <option value="NSW">NSW</option>
-        <option value="NT ">NT</option>
+        <option value="NT">NT</option>
         <option value="QLD">QLD</option>
-        <option value="SA ">SA</option>
+        <option value="SA">SA</option>
         <option value="TAS">TAS</option>
         <option value="VIC">VIC</option>
-        <option value="WA ">WA</option>
+        <option value="WA">WA</option>
       </select>
     ) : (
     <input
@@ -34,6 +34,7 @@ const FieldItem = ({ title, name, value, onChange, required }) => (
       value={value}
       onChange={onChange}
       required={required}
+      placeholder={placeholder}
 		/>
   )}
 	</div>
@@ -44,10 +45,12 @@ FieldItem.propTypes = {
 	name: PropTypes.string.isRequired,
 	value: PropTypes.string.isRequired,
 	onChange: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
   required: PropTypes.bool,
 };
 
 FieldItem.defaultProps = {
   required: false,
+  placeholder: null,
 };
 export default FieldItem;

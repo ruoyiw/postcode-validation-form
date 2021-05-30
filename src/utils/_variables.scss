@@ -1,13 +1,18 @@
 // color
 $black: #000000;
 $white: #ffffff;
-$light-grey: #E0E0E0;
+$light-grey: #a4a4a4;
+$mid-grey: #616a74; // mid-grey
 $red: #da3131;
-$orange: #ffb059;
+$cherry: #721c24;
+$pink: #f5c6cb;
+$light-pink: #f8d7da;
 $purple: #8477c9;
 $lavendar: #e7e6ff;
-$green: #06ca8c;
-$blue: #23b9e8;
+$violet: #6856c4;
+$dark-green: #155724;
+$mint: #c3e6cb;
+$light-mint: #d4edda;
 
 // spacing
 $spacing-xxl: 64px;
@@ -17,4 +22,14 @@ $spacing-m: 32px;
 $spacing-xs: 24px;
 $spacing-xsx: 20px;
 $spacing-xxs: 16px;
+$spacing-xxxsx: 12px;
 $spacing-xxxs: 8px;
+
+// breakpoints
+$breakpoint-tablet: 600px;
+$breakpoint-desktop: 920px;
+$breakpoint-desktop-lg: 1150px;
+$breakpoint-highres: 1280px;
+
+$phone-and-down: "only screen and (max-width : #{$breakpoint-tablet})" !default;
+$tablet-and-down: "only screen and (max-width : #{$breakpoint-desktop})" !default;

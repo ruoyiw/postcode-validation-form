@@ -5,6 +5,9 @@ import FieldItem from "../FieldItem/FieldItem";
 import ValidationMessage from "../ValidateMessage/ValidationMessage";
 import "../../App.scss";
 
+/**
+  This is the validation form component includes operations for validation
+*/
 const ValidationForm = () => {
   const [postcode, setPostcode] = useState('');
   const [suburb, setSuburb] = useState('');
@@ -12,6 +15,7 @@ const ValidationForm = () => {
   const [message, setMessage] = useState('');
   const [isValid, setIsValid] = useState(false);
 
+  // clear all inputs and message when click clear button
 	const handleClear = () => {
 		setPostcode('');
 		setSuburb('');
@@ -37,11 +41,11 @@ const ValidationForm = () => {
     success: "The postcode, suburb and state entered are valid"
   };
 
+  // check if the input values match the corresponsing data in a locality 
   const checkLocality = (locality) => {
     let postcodeMatchesSuburb = false;
     let suburbMatchesState = false;    
-    if (state === locality.state) {  
-      // state match
+    if (state === locality.state) { // state match
       if (suburb.toUpperCase() === locality.location) { // suburb matches state
         suburbMatchesState = true;
         if (Number(postcode) === locality.postcode) {  // postcode matches suburb
@@ -52,11 +56,12 @@ const ValidationForm = () => {
     return {postcodeMatchesSuburb, suburbMatchesState};
   };
 
+  // set validation message content based on the result of matches
   const handleValidationMessage = (isValidPostcode, isValidSuburb) => {
-    if (!isValidPostcode) {
+    if (!isValidPostcode) { // if postcode does not match the suburb
       setMessage(messages.postcodeError);
       setIsValid(false);
-    } else if (!isValidSuburb) {
+    } else if (!isValidSuburb) { // if suburb does not match the state
       setMessage(messages.suburbError);
       setIsValid(false);
     } else {
@@ -65,26 +70,34 @@ const ValidationForm = () => {
     }
   };
 
+  // submit the form to our own '/getLocalities' GET endpoint by parsing suburb and state value
   const handleSubmit = async (event) => {
     event.preventDefault();
     await axios.get(`http://localhost:8100/getLocalities?suburb=${suburb}&state=${state}`).then(
       ({data: {localities}}) => {
-        let isValidPostcode; let isValidSuburb;
+        let isValidPostcode; // variable for postcode match suburb check
+        let isValidSuburb;  // variable for suburb match state check
+
+        // if the localities result is not empty, set the match values
         if (localities !== "") {
+          // if there are multiple localities returned, check each locality for matches
           if (Array.isArray(localities.locality)) {
             localities.locality.some((item) => {
               isValidPostcode = checkLocality(item).postcodeMatchesSuburb;
               isValidSuburb = checkLocality(item).postcodeMatchesSuburb;
+              // if a success match is found, just jump out of the loop
+              // else, keep matching
               if (isValidPostcode && isValidSuburb)
                 return true;
               return false;
             });
-          } else {
+          } else { // if there are multiple localities returned
             isValidPostcode = checkLocality(localities.locality).postcodeMatchesSuburb;
             isValidSuburb = checkLocality(localities.locality).postcodeMatchesSuburb;
           }
           handleValidationMessage(isValidPostcode, isValidSuburb);
-        } else {
+        } else { 
+          // if the localities result is empty, show the surburb not match state error
           setMessage(messages.suburbError);
         }
       }).catch(error => {

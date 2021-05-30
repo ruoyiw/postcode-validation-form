@@ -34,7 +34,7 @@ const renderForm = () => {
 
 describe('ValidationForm Component', () => {
   it('render validation form correctly', () => {
-    // render form
+    // render form elements
     const result = renderForm();
     expect(result.container).toBeInTheDocument();
     expect(result.header).toBeInTheDocument();
@@ -50,9 +50,11 @@ describe('ValidationForm Component', () => {
   });
 
   it('call proxy getLocalities API correctly', async () => {
+    // should return success response if parsing correct queries
     let response = await fetch(getLocalitiesAPI('Sydney', 'NSW'));
     expect(response.ok).toBeTruthy();
 
+    // should return error response if not parsing queries correctly
     response = await fetch(getLocalitiesAPI('', 'NSW'));
     expect(response.ok).toBeFalsy();
   });

@@ -1,17 +1,24 @@
+/**
+  This is a proxy server uses express middleware 
+  to apply a Access-Control-Allow-Origin: * header 
+  to every response and request the data from the Australia Post API
+*/
+
 const express = require("express");
 const request = require("request");
 
 const app = express();
+
+// applies the Access-Control-Allow-Origin: * to that original response
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   next();
 });
 
-// when express receives a request for ANY url...
+// set up a new API request to AusPost API
 app.get("/getLocalities", (req, res) => {
-  // set up a new request to Auspost
   const config = {
-    // get the suburb and state from the URL querystring, to forward on to Auspost
+    // get the suburb and state from the URL query string, then forward to the AusPost API
     url: `https://digitalapi.auspost.com.au/postcode/search.json?q=${req.query.suburb}
     &state=${req.query.state}`,
     method: "GET",
@@ -20,8 +27,7 @@ app.get("/getLocalities", (req, res) => {
     },
   };
 
-  // Make the API request, and forward response back to original,
-  // removing the CORS header along the way
+  // make the API request and forward response back to original
   const newRequest = request(config);
   req
     .pipe(newRequest)
@@ -31,5 +37,6 @@ app.get("/getLocalities", (req, res) => {
     .pipe(res);
 });
 
+// set the port to listen on
 const PORT = process.env.PORT || 8100;
 app.listen(PORT, () => console.log(`listening on ${PORT}`));

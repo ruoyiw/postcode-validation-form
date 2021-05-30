@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitFor, act } from '@testing-library/react';
 
 import { render, getLocalitiesAPI } from '../../utils/setupTests';
 import ValidationForm from './ValidationForm';
@@ -16,7 +16,7 @@ const renderForm = () => {
   const stateField = result.queryByDataCy('state-field');
   const submitBtn = container.querySelector('.validation-form__actions--submit');
   const clearBtn = container.querySelector('.validation-form__actions--clear');
-  const message = container.querySelector('.validation-form__message');
+  const message = result.queryByDataCy('validation-message');
  
   return {
     ...result,
@@ -57,20 +57,35 @@ describe('ValidationForm Component', () => {
     expect(response.ok).toBeFalsy();
   });
 
-  // FIXME: This test is failed currently as the message component always cannot display, 
-  // need to figure out if the validation is successful or not
+  it('call onsubmit function correct when submit the form', async () => {
+    const {formBody} =  renderForm();
+    const handleSubmit = jest.fn();
+    formBody.onsubmit = handleSubmit;
+    fireEvent.submit(formBody);
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  // FIXME: This test is failed currently as the message component is show
+  // in the DOM but fail the assert of toBeInTheDocument(), 
+  // need to figure investigate the problem
   xit('if the entered postcode not matches the suburb', async () => {
     const result =  renderForm();
     fireEvent.change(result.postcodeField, { target: { value: 2222 } });
     fireEvent.change(result.suburbField, { target: { value: 'Sydney' } });
     fireEvent.change(result.stateField, { target: { value: 'NSW' } });
-    fireEvent.click(result.submitBtn);
-    expect(result.message).toBeInTheDocument();
-    expect(result.message).toHaveClass("error");
+    // fireEvent.click(result.submitBtn);
+    const handleSubmit = jest.fn();
+    result.formBody.onsubmit = handleSubmit;
+    act(() => {fireEvent.submit(result.formBody);});
+    await waitFor(() => {
+      expect(result.message).toBeInTheDocument();
+      expect(result.message).toHaveClass("error");
+    });
   });
 
-  // FIXME: This test is failed currently as the message component always cannot display, 
-  // need to figure out if the validation is successful or not
+  // FIXME: This test is failed currently as the message component is show
+  // in the DOM but fail the assert of toBeInTheDocument(), 
+  // need to figure investigate the problem
   xit('if the entered surburb not matches the state', async () => {
     const result =  renderForm();
     fireEvent.change(result.postcodeField, { target: { value: 2000 } });
@@ -81,8 +96,9 @@ describe('ValidationForm Component', () => {
     expect(result.message).toHaveClass("error");
   });
 
-  // FIXME: This test is failed currently as the message component always cannot display, 
-  // need to figure out if the validation is successful or not
+  // FIXME: This test is failed currently as the message component is show
+  // in the DOM but fail the assert of toBeInTheDocument(), 
+  // need to figure investigate the problem
   xit('if the postcode, suburb and state match', async() => {
     const result =  renderForm();
     fireEvent.change(result.postcodeField, { target: { value: 2000 } });

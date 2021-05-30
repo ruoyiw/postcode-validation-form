@@ -2,16 +2,19 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const FieldItem = ({ title, name, value, onChange }) => (
+const FieldItem = ({ title, name, value, onChange, required }) => (
   <div>
-		<label className="validation-form__field-title" htmlFor={name}>{title}</label>
+		<label className="validation-form__field-title" htmlFor={name}>
+      {title}
+      {required && <span className="validation-form__field-title__req-symbol"> *</span>}
+    </label>
 		{name === 'state' ? (
       <select 
         className="validation-form__field-body"
         name="state"
         value={value}
         onChange={onChange}
-        required
+        required={required}
       >
         <option value="">Choose state...</option>
         <option value="ACT">ACT</option>
@@ -30,7 +33,7 @@ const FieldItem = ({ title, name, value, onChange }) => (
       name={name}
       value={value}
       onChange={onChange}
-      required 
+      required={required}
 		/>
   )}
 	</div>
@@ -39,11 +42,12 @@ const FieldItem = ({ title, name, value, onChange }) => (
 FieldItem.propTypes = {
 	title: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
-	value: PropTypes.string,
-	onChange: PropTypes.func.isRequired
+	value: PropTypes.string.isRequired,
+	onChange: PropTypes.func.isRequired,
+  required: PropTypes.bool,
 };
 
 FieldItem.defaultProps = {
-	value: '',
+  required: false,
 };
 export default FieldItem;

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import axios from 'axios';
 
 import FieldItem from "../FieldItem/FieldItem";
@@ -14,6 +14,14 @@ const ValidationForm = () => {
   const [state, setState] = useState('');
   const [message, setMessage] = useState('');
   const [isValid, setIsValid] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // this is for React useEffect warning when running test: 
+  // Can't perform a React state update on an unmounted component
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, [message]);
 
   // clear all inputs and message when click clear button
 	const handleClear = () => {
@@ -79,7 +87,7 @@ const ValidationForm = () => {
         let isValidSuburb;  // variable for suburb match state check
 
         // if the localities result is not empty, set the match values
-        if (localities !== "") {
+        if (localities !== "" && mounted) {
           // if there are multiple localities returned, check each locality for matches
           if (Array.isArray(localities.locality)) {
             localities.locality.some((item) => {

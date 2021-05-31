@@ -69,7 +69,7 @@ describe('ValidationForm Component', () => {
 
   // FIXME: This test is failed currently as the message component is show
   // in the DOM but fail the assert of toBeInTheDocument(), 
-  // need to figure investigate the problem
+  // need to further investigate the problem
   xit('if the entered postcode not matches the suburb', async () => {
     const result =  renderForm();
     fireEvent.change(result.postcodeField, { target: { value: 2222 } });
@@ -87,7 +87,7 @@ describe('ValidationForm Component', () => {
 
   // FIXME: This test is failed currently as the message component is show
   // in the DOM but fail the assert of toBeInTheDocument(), 
-  // need to figure investigate the problem
+  // need to further investigate the problem
   xit('if the entered surburb not matches the state', async () => {
     const result =  renderForm();
     fireEvent.change(result.postcodeField, { target: { value: 2000 } });
@@ -100,7 +100,7 @@ describe('ValidationForm Component', () => {
 
   // FIXME: This test is failed currently as the message component is show
   // in the DOM but fail the assert of toBeInTheDocument(), 
-  // need to figure investigate the problem
+  // need to further investigate the problem
   xit('if the postcode, suburb and state match', async() => {
     const result =  renderForm();
     fireEvent.change(result.postcodeField, { target: { value: 2000 } });
